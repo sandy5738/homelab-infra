@@ -23,6 +23,7 @@
       - whatomate
       - portainer
       - byparr
+      - assistant
 
   tasks:
     - name: Synchronize srv/ files from repo to target host /srv

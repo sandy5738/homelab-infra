@@ -23,6 +23,7 @@ homelab-infra/
 │   │   ├── sparkyfitness/           # Fitness & workout tracker
 │   │   ├── whatomate/               # WhatsApp Cloud API automation
 │   │   ├── glance/                  # Unified homelab dashboard
+│   │   ├── assistant/               # Home Assistant automation
 │   │   └── portainer/               # Container management UI
 │   ├── ADR.md                       # Architecture Decision Records (ADR-001 - ADR-006)
 │   └── CLEANUP.md                   # Modernization audit and checklist
