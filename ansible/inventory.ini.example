@@ -1,0 +1,17 @@
+# ==============================================================================
+# Homelab Ansible Inventory Template
+# Copy this file to 'inventory.ini' and fill in your server coordinates.
+# 'inventory.ini' is gitignored to protect internal LAN and Tailscale IPs.
+# ==============================================================================
+
+[homelab]
+# Connect via local LAN, Tailscale IP, or MagicDNS hostname
+server ansible_host=YOUR_SERVER_IP ansible_user=YOUR_SSH_USER
+
+[homelab:vars]
+# Target host architecture settings
+tailscale_ip=100.x.y.z
+media_dir=/mnt/Data/Media
+srv_root=/srv
+docker_root=/srv/docker
+ansible_python_interpreter=/usr/bin/python3

@@ -29,7 +29,7 @@ homelab-infra/
 │   └── CLEANUP.md                   # Modernization audit and checklist
 ├── ansible/                         # Infrastructure automation playbooks
 │   ├── ansible.cfg                  # Ansible configuration defaults
-│   ├── inventory.ini                # Host definitions (LAN & Tailscale)
+│   ├── inventory.ini.example        # Host inventory template (gitignored)
 │   └── playbooks/
 │       ├── 01-bootstrap.yml         # Server OS, Docker, kernel, and storage setup
 │       └── 02-deploy.yml            # Syncs srv/ to target /srv and restarts stacks
@@ -42,6 +42,13 @@ homelab-infra/
 ---
 
 ## Deploying with Ansible
+
+### 0. Prepare Inventory
+Copy the template and configure your server IP and credentials:
+```bash
+cp ansible/inventory.ini.example ansible/inventory.ini
+nano ansible/inventory.ini
+```
 
 ### 1. Bootstrap Server (New Machine / Disaster Recovery)
 Installs Docker, creates users, sets up UFW, and creates the `traefik_proxy` bridge:

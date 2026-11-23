@@ -32,6 +32,11 @@
 **/config.toml
 !**/config.toml.example
 
+# Ansible host inventories (protects internal LAN & Tailscale IPs)
+ansible/inventory.ini
+ansible/inventory*.ini
+!ansible/inventory.ini.example
+
 # Third-party standalone repositories
 **/openGym/
 
