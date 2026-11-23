@@ -1,0 +1,39 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Asia/Kolkata}
+      - CPU_FALLBACK=true
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,video,utility
+    ports:
+      - "7359:7359/udp"
+      - "1901:1900/udp"
+    devices:
+      - /dev/dri:/dev/dri
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: -1
+              capabilities: [gpu]
+    volumes:
+      - ${DATA_DIR:-./data}:/config
+      - ${MEDIA_DIR:-/mnt/SandysHDD/Media}:/Media
+      - /opt/vc/lib:/opt/vc/lib:ro
+    networks:
+      - media
+      - traefik_proxy
+
+networks:
+  media:
+    name: media
+    external: true
+  traefik_proxy:
+    name: traefik_proxy
+    external: true

@@ -1,0 +1,24 @@
+services:
+  qbittorrent:
+    image: ghcr.io/hotio/qbittorrent:release
+    container_name: qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Asia/Kolkata}
+      - UMASK=${UMASK:-002}
+    volumes:
+      - ${DATA_DIR:-./data}:/config
+      - ${MEDIA_DIR:-/mnt/SandysHDD/Media}:/data
+    networks:
+      - media
+      - traefik_proxy
+
+networks:
+  media:
+    name: media
+    external: true
+  traefik_proxy:
+    name: traefik_proxy
+    external: true

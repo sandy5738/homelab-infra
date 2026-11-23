@@ -1,0 +1,34 @@
+services:
+  glance:
+    image: glanceapp/glance:latest
+    container_name: glance
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    volumes:
+      - ./config:/app/config
+      - ./assets:/app/assets
+      - ./.env:/app/config/.env
+    env_file: .env
+    networks:
+      - default
+      - traefik_proxy
+  glance-agent:
+    image: glanceapp/agent:latest
+    container_name: glance-agent
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    networks:
+      - default
+
+networks:
+  traefik_proxy:
+    name: traefik_proxy
+    external: true

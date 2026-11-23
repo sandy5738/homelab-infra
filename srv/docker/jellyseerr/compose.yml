@@ -1,0 +1,22 @@
+services:
+  jellyseerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: jellyseerr
+    restart: unless-stopped
+    init: true
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ:-Asia/Kolkata}
+    volumes:
+      - ${DATA_DIR:-./data}:/app/config
+    networks:
+      - media
+      - traefik_proxy
+
+networks:
+  media:
+    name: media
+    external: true
+  traefik_proxy:
+    name: traefik_proxy
+    external: true

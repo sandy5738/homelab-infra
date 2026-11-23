@@ -1,0 +1,45 @@
+# ==============================================================================
+# Homelab Infrastructure .gitignore
+# Strictly prevents committing secrets, persistent data, and certificates
+# ==============================================================================
+
+# Runtime application data & persistent volumes
+**/data/
+**/postgresql/
+**/uploads/
+**/backup/
+**/backups/
+**/assets/
+**/config/
+**/media/
+**/downloads/
+**/torrents/
+**/logs/
+*.log
+
+# Secrets, Environment Files & Keys
+*.env
+*.env.*
+!*.env.example
+*.key
+*.crt
+*.pem
+*.pfx
+*.p12
+
+# Custom Application Configs containing secrets
+**/config.toml
+!**/config.toml.example
+
+# Third-party standalone repositories
+openGym/
+
+# System and editor clutter
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+__pycache__/
+*.py[cod]
+*$py.class

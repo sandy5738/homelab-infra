@@ -1,0 +1,21 @@
+services:
+  byparr:
+    image: ghcr.io/thephaseless/byparr:latest
+    container_name: byparr
+    environment:
+      - LOG_LEVEL=INFO
+      - TZ=Asia/Kolkata
+    shm_size: 1gb
+    tmpfs:
+      - /tmp:exec,mode=1777
+      - /cache:exec,mode=1777
+    security_opt:
+      - apparmor=unconfined
+    networks:
+      - media
+    restart: unless-stopped
+
+networks:
+  media:
+    name: media
+    external: true

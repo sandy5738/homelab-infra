@@ -1,0 +1,232 @@
+http:
+  serversTransports:
+    portainer_transport:
+      insecureSkipVerify: true
+
+  middlewares:
+    traefik-auth:
+      basicAuth:
+        users:
+          - "admin:$2y$05$bUNrUcI0JGDyskRA24nBE.sAtEnoWhUbY8d/EsOCKBW9QrICtr/wy"
+
+  routers:
+    # Traefik Dashboard (Authenticated)
+    traefik-dashboard:
+      rule: "Host(`traefik.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: api@internal
+      middlewares:
+        - traefik-auth
+
+    # HTTP Routers (Direct port 80 access, zero cert warnings, direct WebSockets)
+    jellyfin:
+      rule: "Host(`jellyfin.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: jellyfin
+    radarr:
+      rule: "Host(`radarr.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: radarr
+    sonarr:
+      rule: "Host(`sonarr.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: sonarr
+    prowlarr:
+      rule: "Host(`prowlarr.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: prowlarr
+    qbittorrent:
+      rule: "Host(`qbittorrent.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: qbittorrent
+    jellyseerr:
+      rule: "Host(`jellyseerr.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: jellyseerr
+    homeassistant:
+      rule: "Host(`assistant.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: homeassistant
+    technitium:
+      rule: "Host(`dns.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: adguard
+    sparkyfitness:
+      rule: "Host(`gym.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: sparkyfitness
+    bazarr:
+      rule: "Host(`bazarr.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: bazarr
+    glance:
+      rule: "Host(`glance.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: glance
+    whatomate:
+      rule: "Host(`whatomate.nominomi.lan`)"
+      entrypoints:
+        - web
+      service: whatomate
+
+    # HTTPS Routers (Port 443 with TLS)
+    traefik-dashboard-secure:
+      rule: "Host(`traefik.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: api@internal
+      middlewares:
+        - traefik-auth
+      tls: {}
+    portainer:
+      rule: "Host(`portainer.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: portainer
+      tls: {}
+    jellyfin-secure:
+      rule: "Host(`jellyfin.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: jellyfin
+      tls: {}
+    radarr-secure:
+      rule: "Host(`radarr.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: radarr
+      tls: {}
+    sonarr-secure:
+      rule: "Host(`sonarr.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: sonarr
+      tls: {}
+    prowlarr-secure:
+      rule: "Host(`prowlarr.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: prowlarr
+      tls: {}
+    qbittorrent-secure:
+      rule: "Host(`qbittorrent.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: qbittorrent
+      tls: {}
+    jellyseerr-secure:
+      rule: "Host(`jellyseerr.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: jellyseerr
+      tls: {}
+    homeassistant-secure:
+      rule: "Host(`assistant.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: homeassistant
+      tls: {}
+    technitium-secure:
+      rule: "Host(`dns.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: adguard
+      tls: {}
+    sparkyfitness-secure:
+      rule: "Host(`gym.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: sparkyfitness
+      tls: {}
+    bazarr-secure:
+      rule: "Host(`bazarr.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: bazarr
+      tls: {}
+    glance-secure:
+      rule: "Host(`glance.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: glance
+      tls: {}
+    whatomate-secure:
+      rule: "Host(`whatomate.nominomi.lan`)"
+      entrypoints:
+        - websecure
+      service: whatomate
+      tls: {}
+
+  services:
+    jellyfin:
+      loadBalancer:
+        servers:
+          - url: "http://jellyfin:8096"
+    radarr:
+      loadBalancer:
+        servers:
+          - url: "http://radarr:7878"
+    sonarr:
+      loadBalancer:
+        servers:
+          - url: "http://sonarr:8989"
+    prowlarr:
+      loadBalancer:
+        servers:
+          - url: "http://prowlarr:9696"
+    qbittorrent:
+      loadBalancer:
+        servers:
+          - url: "http://qbittorrent:8080"
+    jellyseerr:
+      loadBalancer:
+        servers:
+          - url: "http://jellyseerr:5055"
+    homeassistant:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.12:8123"
+    portainer:
+      loadBalancer:
+        servers:
+          - url: "https://portainer:9443"
+        serversTransport: portainer_transport
+    adguard:
+      loadBalancer:
+        servers:
+          - url: "http://adguard:3000"
+    sparkyfitness:
+      loadBalancer:
+        servers:
+          - url: "http://sparkyfitness:80"
+    bazarr:
+      loadBalancer:
+        servers:
+          - url: "http://bazarr:6767"
+    glance:
+      loadBalancer:
+        servers:
+          - url: "http://glance:8080"
+    whatomate:
+      loadBalancer:
+        servers:
+          - url: "http://whatomate_app:8080"
+
+tls:
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /etc/traefik/certs/nominomi.lan.crt
+        keyFile: /etc/traefik/certs/nominomi.lan.key

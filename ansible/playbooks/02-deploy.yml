@@ -1,0 +1,65 @@
+---
+# ==============================================================================
+# Playbook 02: Deploy /srv infrastructure and Docker Stacks
+# Syncs declarative files to /srv and starts containers
+# ==============================================================================
+- name: Deploy Homelab Services to /srv
+  hosts: homelab
+  become: yes
+  vars:
+    stacks:
+      - traefik
+      - adguard
+      - cloudflared
+      - glance
+      - jellyfin-nvidia
+      - jellyseerr
+      - sonarr
+      - radarr
+      - prowlarr
+      - bazarr
+      - qbittorrent
+      - sparkyfitness
+      - whatomate
+      - portainer
+      - byparr
+
+  tasks:
+    - name: Synchronize srv/ files from repo to target host /srv
+      synchronize:
+        src: ../../srv/
+        dest: /srv/
+        delete: no
+        recursive: yes
+        rsync_opts:
+          - "--exclude=*/data/"
+          - "--exclude=*/postgresql/"
+          - "--exclude=*/uploads/"
+          - "--exclude=*/backup/"
+          - "--exclude=*/backups/"
+          - "--exclude=*/work/"
+          - "--exclude=*.env"
+          - "--exclude=*.key"
+          - "--exclude=*.crt"
+          - "--exclude=*.log"
+
+    - name: Ensure correct permissions on deployed stack files
+      file:
+        path: /srv/docker
+        owner: sandy
+        group: docker
+        recurse: yes
+
+    - name: Start core proxy & DNS stacks first
+      community.docker.docker_compose_v2:
+        project_src: "/srv/docker/{{ item }}"
+        state: present
+      loop:
+        - traefik
+        - adguard
+
+    - name: Start all remaining application stacks
+      community.docker.docker_compose_v2:
+        project_src: "/srv/docker/{{ item }}"
+        state: present
+      loop: "{{ stacks }}"

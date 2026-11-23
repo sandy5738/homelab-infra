@@ -1,0 +1,73 @@
+# Whatomate Configuration Template
+# Copy to config.toml and customize
+
+[app]
+name = "Whatomate"
+logo_url = ""
+environment = "production"
+debug = false
+encryption_key = "CHANGE_ME_32_CHAR_HEX_KEY_____"
+
+[server]
+host = "0.0.0.0"
+port = 8080
+read_timeout = 30
+write_timeout = 30
+base_path = ""
+allowed_origins = ""
+
+[database]
+host = "db"
+port = 5432
+user = "whatomate"
+password = "CHANGE_ME_DB_PASSWORD"
+name = "whatomate"
+ssl_mode = "disable"
+max_open_conns = 25
+max_idle_conns = 5
+conn_max_lifetime = 300
+
+[redis]
+host = "redis"
+port = 6379
+username = ""
+password = ""
+db = 0
+tls = false
+
+[jwt]
+secret = "CHANGE_ME_64_CHAR_HEX_JWT_SECRET________________________________"
+access_expiry_mins = 60
+refresh_expiry_days = 7
+
+[storage]
+type = "local"
+local_path = "./uploads"
+
+[whatsapp]
+webhook_verify_token = "CHANGE_ME_WEBHOOK_VERIFY_TOKEN"
+api_version = "v24.0"
+base_url = "https://graph.facebook.com"
+app_id = ""
+app_secret = ""
+config_id = ""
+
+[cookie]
+domain = ""
+secure = false
+
+[rate_limit]
+enabled = false
+login_max_attempts = 10
+register_max_attempts = 10
+refresh_max_attempts = 30
+sso_max_attempts = 10
+window_seconds = 60
+trust_proxy = true
+api_max_requests = 200
+api_window_seconds = 60
+
+[default_admin]
+email = "admin@example.com"
+password = "CHANGE_ME_ADMIN_PASSWORD"
+full_name = "Admin"

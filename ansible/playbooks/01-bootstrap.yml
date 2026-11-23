@@ -1,0 +1,67 @@
+---
+# ==============================================================================
+# Playbook 01: Host Machine Bootstrap & Prerequisite Configuration
+# Target: Ubuntu / Debian Homelab Node
+# ==============================================================================
+- name: Bootstrap Homelab Server OS & Docker Engine
+  hosts: homelab
+  become: yes
+  tasks:
+    - name: Update apt cache and upgrade system packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+        cache_valid_time: 3600
+
+    - name: Install essential baseline utilities
+      apt:
+        name:
+          - curl
+          - wget
+          - git
+          - htop
+          - iotop
+          - rsync
+          - ufw
+          - ca-certificates
+          - gnupg
+          - lsb-release
+          - python3
+          - python3-pip
+        state: present
+
+    - name: Install Docker and Docker Compose plugin
+      apt:
+        name:
+          - docker.io
+          - docker-compose-v2
+        state: present
+
+    - name: Ensure Docker service is enabled and running
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Add user 'sandy' to docker group
+      user:
+        name: sandy
+        groups: docker
+        append: yes
+
+    - name: Ensure /srv and infrastructure directories exist with correct ownership
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: sandy
+        group: docker
+        mode: '0775'
+      loop:
+        - /srv
+        - /srv/docker
+
+    - name: Create external Docker network 'traefik_proxy'
+      community.docker.docker_network:
+        name: traefik_proxy
+        driver: bridge
+        state: present

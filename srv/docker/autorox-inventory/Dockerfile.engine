@@ -1,0 +1,36 @@
+# Multi-stage Dockerfile for High-Performance Go Engine
+FROM golang:alpine AS builder
+
+WORKDIR /build
+
+# Install git and build essentials
+RUN apk add --no-cache git ca-certificates
+
+# Cache dependencies
+COPY engine/go.mod engine/go.sum ./
+RUN go mod download
+
+# Copy source and build static binary
+COPY engine/main.go .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o autorox-engine main.go
+
+# Minimal runtime image
+FROM alpine:3.20
+
+WORKDIR /app
+
+RUN apk add --no-cache ca-certificates tzdata sqlite-libs
+
+# Copy binary from builder
+COPY --from=builder /build/autorox-engine /app/autorox-engine
+
+# Default environment
+ENV PORT=8000
+ENV DB_PATH=/app/data/live/inventory.db
+ENV WHATOMATE_URL=http://whatomate_app:8080
+ENV WHATOMATE_KEY=""
+
+EXPOSE 8000
+
+ENTRYPOINT ["/app/autorox-engine"]
+CMD ["--port", "8000", "--db", "/app/data/live/inventory.db"]
